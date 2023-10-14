@@ -1,19 +1,17 @@
-import {Grid, Box, Typography, useTheme} from "@mui/material";
-import {useEffect, useState} from "react";
-import {useAppContext} from "../store/AppContext.tsx";
-import Heading from "../components/UI/Heading.tsx";
-import MinifigCard from "../components/MinifigCard.tsx";
-import Button from "../components/UI/Button.tsx";
-import {useNavigate} from "react-router-dom";
+import {Grid, Box, Typography, useTheme} from '@mui/material';
+import {useEffect, useState} from 'react';
+import {useAppContext} from '../store/AppContext.tsx';
+import Heading from '../components/UI/Heading.tsx';
+import MinifigCard from '../components/MinifigCard.tsx';
+import Button from '../components/UI/Button.tsx';
+import {useNavigate} from 'react-router-dom';
 
 const MinifigsPage = () => {
   const {palette} = useTheme();
-  const { setFinal } = useAppContext();
-  const {minifigs} = useAppContext();
+  const { setFinal, minifigs } = useAppContext();
   const navigate = useNavigate();
   const [active, setActive] = useState(-1);
   const [selected, setSelected] = useState(true);
-  console.log(minifigs)
 
   const handleButton = () => {
     if(active >= 0) {

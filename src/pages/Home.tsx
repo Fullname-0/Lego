@@ -1,11 +1,11 @@
-import {useNavigate} from "react-router-dom";
-import {useAppContext} from "../store/AppContext.tsx";
-import {Box, Grid, useTheme} from "@mui/material";
-import Button from "../components/UI/Button.tsx";
-import Heading from "../components/UI/Heading.tsx";
-import Loader from "../components/UI/Loader.tsx";
-import {getMinifigs} from "../api/api.ts";
-import {useEffect} from "react";
+import {useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {getMinifigs} from '../api/api.ts';
+import {useAppContext} from '../store/AppContext.tsx';
+import {Box, Grid, useTheme} from '@mui/material';
+import Button from '../components/UI/Button.tsx';
+import Heading from '../components/UI/Heading.tsx';
+import Loader from '../components/UI/Loader.tsx';
 
 const Home = () => {
   const {palette} = useTheme();

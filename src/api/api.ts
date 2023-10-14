@@ -48,6 +48,8 @@ export const getMinifig =  async (minifigId: string, onError?: (error: any) => v
 
 export const registerSchipping = async (
   formInfo: {
+    title: any,
+    idMinifig: any,
     name: string,
     surname: string,
     phone: string,

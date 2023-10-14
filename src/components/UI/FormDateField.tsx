@@ -2,13 +2,13 @@ import {DatePicker} from '@mui/x-date-pickers';
 import {Grid, InputLabel, Typography, useTheme} from '@mui/material';
 
 type Props = {
-  id?: string;
+  id: string;
   label: string;
   validated?: boolean;
   errorMsg?: string;
   value: string | null;
   placeholder?: string;
-  valueChangeHandler?: (value: string) => void;
+  valueChangeHandler?: (id: string, value: string) => void;
   labelSx?: any;
   helperText?: string;
 };
@@ -71,7 +71,7 @@ const FormDateField = ({
             },
           },
         }}
-        onChange={(e: any) => valueChangeHandler && valueChangeHandler(e)}
+        onChange={(e: any) => valueChangeHandler && valueChangeHandler(id, e)}
         slotProps={{ textField: { placeholder: placeholder } }}
       />
       {validated && errorMsg && <Typography className={'MuiFormHelperText-root Mui-error'} sx={{

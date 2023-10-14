@@ -14,7 +14,7 @@ const PageNotFound = () => {
       alignItems: 'center',
       flexDirection: 'column'
     }}>
-      <Heading variantSize={'h1'} title={'Page not found'} />
+      <Heading variantSize={'h1'} title={'Page not found'} color={'white'} />
       <Button title={"Go back"} boxShadow={true} onClick={() => navigate(-1)}></Button>
     </Grid>
   );

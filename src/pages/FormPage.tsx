@@ -8,247 +8,63 @@ import FormTextField from '../components/UI/FormTextField.tsx';
 import FormDateField from '../components/UI/FormDateField.tsx';
 import Heading from "../components/UI/Heading.tsx";
 
-const formErrors = {
-  nameError: 'Please enter name',
-  surnameError: 'Please enter surname',
-  phoneError: 'Please enter phone number',
-  emailError: 'Please enter valid email',
-  birthError: 'Please enter date of birth',
-  addressError: 'Please enter address',
-  cityError: 'Please enter city',
-  stateError: 'Please enter state',
-  zipCodeError: 'Please enter zip code',
-};
-
 const FormPage = () => {
+  const initialFormState = {
+    name: {value: '', error: 'Please enter name'},
+    surname: {value: '', error: 'Please enter surname'},
+    phone: {value: '', error: 'Please enter phone number'},
+    email: {value: '', error: 'Please enter valid email'},
+    birth: {value: '', error: 'Please enter date of birth'},
+    address: {value: '', error: 'Please enter address'},
+    city: {value: '', error: 'Please enter city'},
+    state: {value: '', error: 'Please enter state'},
+    zipCode: {value: '', error: 'Please enter zip code'},
+  }
   const {palette} = useTheme();
   const {selectMinifig, setInit} = useAppContext();
   const [validated, setValidated] = useState(false);
-  const [formValidation, setFormValidation] = useState(formErrors);
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [formInfo, setFormInfo] = useState({
-    name: '',
-    surname: '',
-    phone: '',
-    email: '',
-    birth: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-  });
+  const [formInfo, setFormInfo] = useState(initialFormState);
 
   const resetInputs = () => {
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        name: '',
-        surname: '',
-        phone: '',
-        email: '',
-        birth: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: '',
-      };
-    });
+    setFormInfo(initialFormState);
   };
 
-  const nameHandler = (value: string) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        nameError: formErrors.nameError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        nameError: '',
-      });
+  const valueHandler = (accessor: string, value: any) => {
+    let validValue: any = value;
+    let validInput: any = false;
+
+    if(accessor == 'phone') {
+      validValue = value.replace(/\D/g, '');
     }
+    if(accessor == 'email') {
+      validInput = !isEmail(value)
+    }
+    if(accessor == 'zipCode') {
+      const numericValue = value.replace(/\D/g, '');
+      validValue = numericValue.replace(/(\d{2})(\d{1,})/, '$1-$2');
+      validInput = validValue.length !== 6;
+    }
+    if(accessor == 'birth') {
+      validValue = value?.$d;
+    }
+
     setFormInfo((prevState) => {
       return {
         ...prevState,
-        name: value,
-      };
-    });
-  };
-
-  const surnameHandler = (value: string) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        surnameError: formErrors.surnameError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        surnameError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        surname: value,
-      };
-    });
-  };
-
-  const phoneHandler = (value: string) => {
-    const numericValue = value.replace(/\D/g, '');
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        phoneError: formErrors.phoneError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        phoneError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        phone: numericValue,
-      };
-    });
-  };
-
-  const emailHandler = (value: string) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        emailError: formErrors.emailError,
-      });
-    } else if (!isEmail(value)) {
-      setFormValidation({
-        ...formValidation,
-        emailError: 'Niepoprawny adres e-mail',
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        emailError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        email: value,
-      };
-    });
-  };
-
-  const birthHandler = (value: any) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        birthError: formErrors.birthError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        birthError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        birth: value?.$d,
-      };
-    });
-  };
-
-  const addressHandler = (value: string) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        addressError: formErrors.addressError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        addressError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        address: value,
-      };
-    });
-  };
-
-  const cityHandler = (value: string) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        cityError: formErrors.cityError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        cityError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        city: value,
-      };
-    });
-  };
-
-  const stateHandler = (value: string) => {
-    if (value.length < 1) {
-      setFormValidation({
-        ...formValidation,
-        stateError: formErrors.stateError,
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        stateError: '',
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        state: value,
-      };
-    });
-  };
-
-  const zipCodeHandler = (value: string) => {
-    const numericValue = value.replace(/\D/g, '');
-    const formattedValue = numericValue.replace(/(\d{2})(\d{1,})/, '$1-$2');
-
-    if (formattedValue.length === 6) {
-      setFormValidation({
-        ...formValidation,
-        zipCodeError: '',
-      });
-    } else {
-      setFormValidation({
-        ...formValidation,
-        zipCodeError: formErrors.zipCodeError,
-      });
-    }
-    setFormInfo((prevState) => {
-      return {
-        ...prevState,
-        zipCode: formattedValue,
+        [accessor]: {
+          value: validValue,
+          error: (validValue.length < 1 || validInput) ? initialFormState[accessor].error : ''
+        },
       };
     });
   };
 
   const validatedForm = () => {
-    for (const key in formValidation) {
-      if (formValidation[key] !== '') {
+    for (const key in formInfo) {
+      if (formInfo[key].error !== '') {
         return false;
       }
     }
@@ -264,25 +80,27 @@ const FormPage = () => {
 
     if (formInfo) {
       setLoading(true);
+      const valuesWithProperties = {};
+      for (const key in formInfo) {
+        valuesWithProperties[key] = formInfo[key].value;
+      }
       const formData = {
-        ...formInfo,
-        name: selectMinifig.name,
-        idMinifig: selectMinifig.set_num
+        title: selectMinifig[0].name,
+        idMinifig: selectMinifig[0].set_num,
+        ...valuesWithProperties,
       }
       registerSchipping(formData)
         .then((res: any) => {
           setLoading(false);
           if (res.status == 201 || res.status == 200) {
-            setInit()
-            setSuccessMsg(res.statusText)
-
-            // resetInputs();
+            setSuccessMsg('Thank you for your request :)')
+            setValidated(false)
+            resetInputs();
           } else {
             setErrorMsg('Something went wrong! Please try again later!')
           }
         })
         .catch((error: any) => {
-          resetInputs();
           console.log(error)
           setErrorMsg('Something went wrong! Please try again later!')
           setLoading(false);
@@ -295,6 +113,7 @@ const FormPage = () => {
       const timeout = setTimeout(() => {
         setSuccessMsg('');
         setErrorMsg('');
+        setInit()
       }, 2000);
 
       return () => {
@@ -336,22 +155,22 @@ const FormPage = () => {
               type={'text'}
               label={'Name'}
               validated={validated}
-              errorMsg={formValidation.nameError}
-              value={formInfo.name}
-              valueChangeHandler={nameHandler}
+              errorMsg={formInfo.name.error}
+              value={formInfo.name.value}
+              valueChangeHandler={valueHandler}
               placeholder={'Name'}
-              helperText={formValidation.nameError}
+              helperText={initialFormState.name.error}
             />
             <FormTextField
               id={'surname'}
               type={'text'}
               label={'Surname'}
               validated={validated}
-              errorMsg={formValidation.surnameError}
-              value={formInfo.surname}
-              valueChangeHandler={surnameHandler}
+              errorMsg={formInfo.surname.error}
+              value={formInfo.surname.value}
+              valueChangeHandler={valueHandler}
               placeholder={'Surname'}
-              helperText={formValidation.surnameError}
+              helperText={initialFormState.surname.error}
             />
           </Box>
           <FormTextField
@@ -359,53 +178,54 @@ const FormPage = () => {
             type={'tel'}
             label={'Phone number'}
             validated={validated}
-            errorMsg={formValidation.phoneError}
-            value={formInfo.phone}
-            valueChangeHandler={phoneHandler}
+            errorMsg={formInfo.phone.error}
+            value={formInfo.phone.value}
+            valueChangeHandler={valueHandler}
             placeholder={'Phone number'}
-            helperText={formValidation.phoneError}
+            helperText={initialFormState.phone.error}
           />
           <FormTextField
             id={'email'}
             type={'email'}
             label={'Email'}
             validated={validated}
-            errorMsg={formValidation.emailError}
-            value={formInfo.email}
-            valueChangeHandler={emailHandler}
+            errorMsg={formInfo.email.error}
+            value={formInfo.email.value}
+            valueChangeHandler={valueHandler}
             placeholder={'Email'}
-            helperText={formValidation.emailError}
+            helperText={initialFormState.email.error}
           />
           <FormDateField
             id={'birth'}
             label={'Date of birth'}
-            value={formInfo.birth}
+            value={formInfo.birth.value}
             validated={validated}
-            errorMsg={formValidation.birthError}
-            valueChangeHandler={birthHandler}
+            errorMsg={formInfo.birth.error}
+            valueChangeHandler={valueHandler}
             placeholder={'Date of birth'}
-            helperText={formValidation.birthError}
+            helperText={initialFormState.birth.error}
           />
           <FormTextField
             id={'address'}
             type={'text'}
             label={'Address'}
             validated={validated}
-            errorMsg={formValidation.addressError}
-            value={formInfo.address}
-            valueChangeHandler={addressHandler}
+            errorMsg={formInfo.address.error}
+            value={formInfo.address.value}
+            valueChangeHandler={valueHandler}
             placeholder={'Address'}
-            helperText={formValidation.addressError}
+            helperText={initialFormState.address.error}
           />
           <FormTextField
             id={'city'}
             type={'text'}
             label={'City'}
             validated={validated}
-            errorMsg={formValidation.cityError}
-            value={formInfo.city}
-            valueChangeHandler={cityHandler}
+            errorMsg={formInfo.city.error}
+            value={formInfo.city.value}
+            valueChangeHandler={valueHandler}
             placeholder={'City'}
+            helperText={initialFormState.city.error}
           />
           <Box sx={{
             display: 'flex',
@@ -417,20 +237,22 @@ const FormPage = () => {
               type={'text'}
               label={'State'}
               validated={validated}
-              errorMsg={formValidation.stateError}
-              value={formInfo.state}
-              valueChangeHandler={stateHandler}
+              errorMsg={formInfo.state.error}
+              value={formInfo.state.value}
+              valueChangeHandler={valueHandler}
               placeholder={'State'}
+              helperText={initialFormState.state.error}
             />
             <FormTextField
-              id={'zip'}
+              id={'zipCode'}
               type={'text'}
               label={'Zip code'}
               validated={validated}
-              errorMsg={formValidation.zipCodeError}
-              value={formInfo.zipCode}
-              valueChangeHandler={zipCodeHandler}
+              errorMsg={formInfo.zipCode.error}
+              value={formInfo.zipCode.value}
+              valueChangeHandler={valueHandler}
               placeholder={'Zip code'}
+              helperText={initialFormState.zipCode.error}
             />
           </Box>
         </Box>

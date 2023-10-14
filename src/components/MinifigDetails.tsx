@@ -25,7 +25,6 @@ const MinifigDetails = ({error, success, loadingForm, item, onActionSend}: Props
       const fetchParts = async () => {
         const data = await getMinifig(item[0].set_num)
           .then((res: any) => {
-            console.log(res)
             return res
           })
           .catch((error) => {

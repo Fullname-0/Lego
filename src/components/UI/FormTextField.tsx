@@ -1,14 +1,14 @@
 import { Grid, InputLabel, TextField, useTheme } from '@mui/material';
 
 type Props = {
-  id?: string;
+  id: string;
   type?: string;
   label: string;
   validated?: boolean;
   errorMsg?: string;
   value: string | undefined;
   placeholder?: string;
-  valueChangeHandler?: (value: string) => void;
+  valueChangeHandler?: (id: string, value: string) => void;
   labelSx?: any;
   maxLength?: number;
   helperText?: string;
@@ -79,7 +79,7 @@ const FormTextField = ({
         inputProps={{ maxLength: maxLength }}
         value={value}
         error={validated && errorMsg !== ''}
-        onChange={(e: any) => valueChangeHandler && valueChangeHandler(e.target.value)}
+        onChange={(e: any) => valueChangeHandler && valueChangeHandler(id, e.target.value)}
         helperText={validated && errorMsg}
       />
     </Grid>
