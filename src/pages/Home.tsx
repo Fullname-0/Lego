@@ -23,7 +23,7 @@ const Home = () => {
         color={palette.primary.light}
         textAlignment={'center'}
       />
-      <Button title={"let's go!"} boxShadow={true} onClick={() => navigate('/minifigs')}></Button>
+      <Button title={"let's go!"} boxShadow={true} onClick={() => navigate('/minifigs', {state: {active: true}})}></Button>
     </Grid>
   );
 }

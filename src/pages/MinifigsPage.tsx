@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import Heading from '../components/UI/Heading.tsx';
 import MinifigCard from '../components/MinifigCard.tsx';
 import Button from '../components/UI/Button.tsx';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {getMinifigs} from "../api/api.ts";
 import Loader from "../components/UI/Loader.tsx";
 
@@ -12,6 +12,7 @@ const randomArray = () => {
 }
 
 const MinifigsPage = () => {
+  const location = useLocation();
   const {palette} = useTheme();
   const navigate = useNavigate();
   const [active, setActive] = useState(-1);
@@ -33,18 +34,22 @@ const MinifigsPage = () => {
   }
 
   useEffect(() => {
-    if(minifigs.length == 0) {
-      getMinifigs()
-        .then((res: any) => {
-          const minifigsResult = res.results.sort(randomArray).slice(0, 3)
-          setMinifigs(minifigsResult)
-        })
-        .catch((error) => {
-          console.error(error);
-          setError('Something went wrong! Please try again later.')
-        });
+    if(location.state && location.state.active) {
+      if(minifigs.length == 0) {
+        getMinifigs()
+          .then((res: any) => {
+            const minifigsResult = res.results.sort(randomArray).slice(0, 3)
+            setMinifigs(minifigsResult)
+          })
+          .catch((error) => {
+            console.error(error);
+            setError('Something went wrong! Please try again later.')
+          });
+      }
+    } else {
+      navigate('/')
     }
-  }, [])
+  }, [location])
 
   useEffect(() => {
     active >= 0 && setSelected(true)
