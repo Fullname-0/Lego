@@ -1,8 +1,8 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {getMinifigs} from '../api/api.ts';
 import {useAppContext} from '../store/AppContext.tsx';
-import {Box, Grid, useTheme} from '@mui/material';
+import {Box, Grid, Typography, useTheme} from '@mui/material';
 import Button from '../components/UI/Button.tsx';
 import Heading from '../components/UI/Heading.tsx';
 import Loader from '../components/UI/Loader.tsx';
@@ -11,6 +11,7 @@ const Home = () => {
   const {palette} = useTheme();
   const navigate = useNavigate();
   const { loading, step, setStep, setLoading } = useAppContext();
+  const [error, setError] = useState('');
 
   const handleButton = async () => {
     setLoading()
@@ -19,6 +20,7 @@ const Home = () => {
         return res.results
       })
       .catch((error) => {
+        setError('Something went wrong! Please try again later!')
         console.error(error);
       });
     setStep(minifigs)
@@ -45,6 +47,8 @@ const Home = () => {
         color={palette.primary.light}
         textAlignment={'center'}
       />
+      {error && <Typography mb={2} sx={{color: 'red', fontSize: '18px', textAlign: 'center'}}>
+        {error}</Typography>}
       {loading && <Box sx={{position: 'relative'}} mt={'36px'}>
         <Loader />
       </Box>}

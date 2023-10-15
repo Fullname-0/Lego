@@ -9,7 +9,7 @@ const DetailsButtonCard = ({title, href}: Props) => {
   const {palette} = useTheme()
 
   return (
-    <Box component={'a'} href={href} target={'_blank'} sx={{
+    <Box component={'a'} href={href} target={'_blank'} onClick={(e) => e.stopPropagation()} sx={{
       fontFamily: 'Onest',
       fontWeight: 600,
       textDecoration: 'none',
