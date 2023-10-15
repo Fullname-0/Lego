@@ -1,6 +1,5 @@
 import {Box, Typography, useTheme} from '@mui/material';
 import {useEffect, useState} from 'react';
-import {useAppContext} from '../store/AppContext.tsx';
 import Heading from './UI/Heading.tsx';
 import Button from './UI/Button.tsx';
 import Loader from '../components/UI/Loader.tsx';
@@ -15,15 +14,15 @@ type Props = {
 }
 
 const MinifigDetails = ({error, success, loadingForm, item, onActionSend}: Props) => {
-  const {palette} = useTheme()
-  const { loading, setLoading, stopLoading } = useAppContext();
+  const {palette} = useTheme();
   const [minifig, setMinifig] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if(!minifig) {
-      setLoading()
+      setLoading(true)
       const fetchParts = async () => {
-        const data = await getMinifig(item[0].set_num)
+        const data = await getMinifig(item.idMinifig)
           .then((res: any) => {
             return res
           })
@@ -31,7 +30,7 @@ const MinifigDetails = ({error, success, loadingForm, item, onActionSend}: Props
             console.error(error);
           });
         setMinifig(data)
-        stopLoading()
+        setLoading(false)
       }
       fetchParts()
     }
@@ -67,7 +66,7 @@ const MinifigDetails = ({error, success, loadingForm, item, onActionSend}: Props
           alignItems: {xs: 'flex-start', md: 'center'},
           gap: '20px'
         }}>
-          <Box component={'img'} src={item[0].set_img_url} sx={{
+          <Box component={'img'} src={item.imgMinifig} sx={{
             width: '120px',
             height: '180px',
             objectFit: 'cover',
@@ -76,7 +75,7 @@ const MinifigDetails = ({error, success, loadingForm, item, onActionSend}: Props
           <Typography variant={'h6'} color={palette.primary.dark} sx={{
             textAlign: 'center'
           }}>
-            {item[0].name}
+            {item.title}
           </Typography>
           {loading ?
             <Box pt={20} pb={10} sx={{
@@ -95,7 +94,7 @@ const MinifigDetails = ({error, success, loadingForm, item, onActionSend}: Props
                 gap: '20px'
               }}>
                 {
-                  minifig?.results.map((item, index) => {
+                  minifig?.results.map((item: any, index: number) => {
                     return (
                       <Box sx={{
                         display: 'flex',

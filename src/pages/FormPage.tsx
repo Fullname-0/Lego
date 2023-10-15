@@ -3,12 +3,14 @@ import {useEffect, useState} from 'react';
 import isEmail from 'validator/lib/isEmail';
 import {registerSchipping} from "../api/api.ts";
 import MinifigDetails from '../components/MinifigDetails.tsx';
-import {useAppContext} from '../store/AppContext.tsx';
 import FormTextField from '../components/UI/FormTextField.tsx';
 import FormDateField from '../components/UI/FormDateField.tsx';
 import Heading from "../components/UI/Heading.tsx";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const FormPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate()
   const initialFormState = {
     name: {value: '', error: 'Please enter name'},
     surname: {value: '', error: 'Please enter surname'},
@@ -21,7 +23,7 @@ const FormPage = () => {
     zipCode: {value: '', error: 'Please enter zip code'},
   }
   const {palette} = useTheme();
-  const {selectMinifig, setInit} = useAppContext();
+  const [selectMinifig, setSelectMinifig] = useState();
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -80,14 +82,14 @@ const FormPage = () => {
 
     if (formInfo) {
       setLoading(true);
-      const valuesWithProperties = {};
+      const values = {};
       for (const key in formInfo) {
-        valuesWithProperties[key] = formInfo[key].value;
+        values[key] = formInfo[key].value;
       }
       const formData = {
-        title: selectMinifig[0].name,
-        idMinifig: selectMinifig[0].set_num,
-        ...valuesWithProperties,
+        title: selectMinifig && selectMinifig?.title,
+        idMinifig: selectMinifig && selectMinifig?.idMinifig,
+        ...values,
       }
       registerSchipping(formData)
         .then((res: any) => {
@@ -101,7 +103,7 @@ const FormPage = () => {
           }
         })
         .catch((error: any) => {
-          console.log(error)
+          console.error(error)
           setErrorMsg('Something went wrong! Please try again later!')
           setLoading(false);
         });
@@ -113,7 +115,7 @@ const FormPage = () => {
       const timeout = setTimeout(() => {
         setSuccessMsg('');
         setErrorMsg('');
-        setInit()
+        navigate('/')
       }, 2000);
 
       return () => {
@@ -121,6 +123,14 @@ const FormPage = () => {
       };
     }
   }, [errorMsg, successMsg])
+
+  useEffect(() => {
+    if(location.state) {
+      setSelectMinifig(location.state)
+    } else {
+      navigate(-1)
+    }
+  }, [location])
 
   return (
     <Grid item xs={12} sx={{
@@ -258,13 +268,13 @@ const FormPage = () => {
         </Box>
       </Grid>
       <Grid item xs={12} md={5} lg={3.5}>
-        <MinifigDetails
+        {selectMinifig && <MinifigDetails
           error={errorMsg}
           success={successMsg}
           loadingForm={loading}
           item={selectMinifig}
           onActionSend={actionSend}
-        />
+        />}
       </Grid>
     </Grid>
   )
